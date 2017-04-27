@@ -1,0 +1,77 @@
+#+TITLE: Introduction to GNU/Linux and the Command Line
+#+AUTHOR: Gabriele Bozzola
+
+* Interacting with the filesystem
+** pwd
+   Present working directory: shows the folder /where I am/
+   (henceforth /working/ or /current/ directory)
+** ls
+   List: shows the files in the current directory
+** cd /directory/
+   Change Directory: changes the working directory
+** cp /what/ /where/
+   Copy: copy one file from here to there
+** mv /what/ /where/
+   Move: move or rename a file
+* Expand commands: arguments
+  In accordance with the philosophy con GNU/Linux commands are simple and
+  extensible. Flags and arguments expand them
+** ls -l
+   List long: shows detailed information about the files in the working
+   directory
+** ls -a
+   Shows files in the current directory even if they are hidden (the name starts
+   with a dot, es .bashrc)
+** ls /directory/
+   Shows files in a directory visible from the current directory
+** ssh /server/
+   Secure Shell: ssh opens a new terminal in a remote server (usually a
+   workstation or a supercomputer)
+   The flag -X allows the exportation of graphical output
+* How to get help?
+** --help, -h
+   Most commands provide the flag --help and/or -h to show the basic usage
+** man
+   man shows the complete manual pages
+** giyf
+   Google Is Your Friend
+* Project! Step 0: Generate random numbers
+** argc and argv
+   argc and argv provide the mean of interaction between a C(++) program and the
+   command line.
+   argc = number of arguments
+   argv = array of arguments (array of strings)
+** Program that generates N random number between A and B
+   random.c
+** Make file
+   A Makefile is a convenient way to simplify the compilation, it avoids
+   unnecessary compilations (saving time) and checks for dependencies. The first
+   command is the one executed with `make` (without specifiers)
+* Redirect output
+** >, >>, |
+   > = redirect output to a file overwriting i
+   >> = redirect output to a file appending the text
+   | = overwrite the output to another command
+   (In accordance with the philosophy)
+** cat
+   Concatenate: it print to the STDOUT the content of a file
+** grep
+   GNU Regular Expression: it search for the occurrences of a string in a file
+   Widely used with cat and pipe
+   grep -n prints the number of the line with the match
+   grep -v prints the lines that do not contain the string
+* Roll a d6
+  Roll a d6 1000 times and save the output to die1.dat
+  In GNU/Linux extensions are meaningless
+** wc
+   Word Count: counts chars, words, lines of a file
+* Roll another d6
+  Roll a second d6 1000 times and save the output to die2.dat
+** paste
+   Paste: joins the content of two files creating a table
+** awk
+   Aho Weinberger Kernighan: does many things with tables
+   (files structured with columns)
+   #+BEGIN_SRC sh
+   awk '{print $1 + $2}' >> sum.dat
+   #+END_SRC
