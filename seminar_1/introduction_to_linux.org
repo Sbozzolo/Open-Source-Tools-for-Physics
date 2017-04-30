@@ -1,6 +1,8 @@
 #+TITLE: Introduction to GNU/Linux and the Command Line
 #+AUTHOR: Gabriele Bozzola
 
+INCREASE THE FONT!!!
+
 * Interacting with the filesystem
 ** pwd
    Present working directory: shows the folder /where I am/
@@ -13,12 +15,25 @@
    Copy: copy one file from here to there
 ** mv /what/ /where/
    Move: move or rename a file
+** mkdir /what/
+   Make Directory: create a new directory
+** rm
+   Remove: delete file
+* Editing files
+  There are many possible choices for creating new text files,
+  examples:
+  - gedit, kate (basic, buit-in in most distros)
+  - nano (terminal based)
+  - emacs, vim (advanced and powerful)
 * Expand commands: arguments
   In accordance with the philosophy con GNU/Linux commands are simple and
   extensible. Flags and arguments expand them
 ** ls -l
    List long: shows detailed information about the files in the working
    directory
+** ls -lh
+   List long human readable: shows detailed information about the files in the
+   working directory with human readable bytes
 ** ls -a
    Shows files in the current directory even if they are hidden (the name starts
    with a dot, es .bashrc)
@@ -74,4 +89,38 @@
    (files structured with columns)
    #+BEGIN_SRC sh
    awk '{print $1 + $2}' >> sum.dat
+   #+END_SRC
+   #+BEGIN_SRC sh
+   cat sum.dat | awk 'BEGIN {print "SUM:"} {sum += $1} END {print sum}'
+   #+END_SRC
+   awk execution can be specified in three steps, what to do before parsing
+   file (in this case print a string), how to parse the file (in this case
+   increment the variable sum) and what to do when the parsing is completed
+   (in this case print the value of the variable sum)
+* bash variables
+  The shell is a special *program* which constitutes a layer bewteen
+  the user and the operating system
+** bash variables
+   Shells have their own (untyped) variables. echo is used to print strings
+   and variables.
+   #+BEGIN_SRC sh
+   a=42
+   echo $a
+   a="pasta"
+   echo $a
+   echo "I like "$a
+   #+END_SRC
+   The dollar symbol $ means that I am referring to the /value/ of the variable,
+   not to the variable itself. The dollar symbol expands the name and outputs
+   the content of the variable.
+   #+BEGIN_SRC sh
+   # WRONG!!!
+   $a=42
+   echo $a
+   #+END_SRC
+   It is important to note that there are no blank space next to the equal symbol
+** Command output
+   Variables can store the output of a command invoked with $()
+   #+BEGIN_SRC sh
+   a=$(cat "sum.dat" | wc -l)
    #+END_SRC

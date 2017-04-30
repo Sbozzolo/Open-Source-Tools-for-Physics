@@ -35,7 +35,7 @@ int main ( int argc, char **argv ) {
 
     /* Print random numbers */
     for (i; i < number; i++){
-      printf("%i\n", rand() % (maximum + 1) + minimum);
+      printf("%i\n", rand() % (maximum) + minimum);
     }
   }
 
