@@ -1,0 +1,126 @@
+#+TITLE: Introduction to GNU/Linux and the Command Line
+#+AUTHOR: Gabriele Bozzola
+
+INCREASE THE FONT!!!
+
+* Interacting with the filesystem
+** pwd
+   Present working directory: shows the folder /where I am/
+   (henceforth /working/ or /current/ directory)
+** ls
+   List: shows the files in the current directory
+** cd /directory/
+   Change Directory: changes the working directory
+** cp /what/ /where/
+   Copy: copy one file from here to there
+** mv /what/ /where/
+   Move: move or rename a file
+** mkdir /what/
+   Make Directory: create a new directory
+** rm
+   Remove: delete file
+* Editing files
+  There are many possible choices for creating new text files,
+  examples:
+  - gedit, kate (basic, buit-in in most distros)
+  - nano (terminal based)
+  - emacs, vim (advanced and powerful)
+* Expand commands: arguments
+  In accordance with the philosophy con GNU/Linux commands are simple and
+  extensible. Flags and arguments expand them
+** ls -l
+   List long: shows detailed information about the files in the working
+   directory
+** ls -lh
+   List long human readable: shows detailed information about the files in the
+   working directory with human readable bytes
+** ls -a
+   Shows files in the current directory even if they are hidden (the name starts
+   with a dot, es .bashrc)
+** ls /directory/
+   Shows files in a directory visible from the current directory
+** ssh /server/
+   Secure Shell: ssh opens a new terminal in a remote server (usually a
+   workstation or a supercomputer)
+   The flag -X allows the exportation of graphical output
+* How to get help?
+** --help, -h
+   Most commands provide the flag --help and/or -h to show the basic usage
+** man
+   man shows the complete manual pages
+** giyf
+   Google Is Your Friend
+* Project! Step 0: Generate random numbers
+** argc and argv
+   argc and argv provide the mean of interaction between a C(++) program and the
+   command line.
+   argc = number of arguments
+   argv = array of arguments (array of strings)
+** Program that generates N random number between A and B
+   random.c
+** Make file
+   A Makefile is a convenient way to simplify the compilation, it avoids
+   unnecessary compilations (saving time) and checks for dependencies. The first
+   command is the one executed with `make` (without specifiers)
+* Redirect output
+** >, >>, |
+   > = redirect output to a file overwriting i
+   >> = redirect output to a file appending the text
+   | = overwrite the output to another command
+   (In accordance with the philosophy)
+** cat
+   Concatenate: it print to the STDOUT the content of a file
+** grep
+   GNU Regular Expression: it search for the occurrences of a string in a file
+   Widely used with cat and pipe
+   grep -n prints the number of the line with the match
+   grep -v prints the lines that do not contain the string
+* Roll a d6
+  Roll a d6 1000 times and save the output to die1.dat
+  In GNU/Linux extensions are meaningless
+** wc
+   Word Count: counts chars, words, lines of a file
+* Roll another d6
+  Roll a second d6 1000 times and save the output to die2.dat
+** paste
+   Paste: joins the content of two files creating a table
+** awk
+   Aho Weinberger Kernighan: does many things with tables
+   (files structured with columns)
+   #+BEGIN_SRC sh
+   awk '{print $1 + $2}' >> sum.dat
+   #+END_SRC
+   #+BEGIN_SRC sh
+   cat sum.dat | awk 'BEGIN {print "SUM:"} {sum += $1} END {print sum}'
+   #+END_SRC
+   awk execution can be specified in three steps, what to do before parsing
+   file (in this case print a string), how to parse the file (in this case
+   increment the variable sum) and what to do when the parsing is completed
+   (in this case print the value of the variable sum)
+* bash variables
+  The shell is a special *program* which constitutes a layer bewteen
+  the user and the operating system
+** bash variables
+   Shells have their own (untyped) variables. echo is used to print strings
+   and variables.
+   #+BEGIN_SRC sh
+   a=42
+   echo $a
+   a="pasta"
+   echo $a
+   echo "I like "$a
+   #+END_SRC
+   The dollar symbol $ means that I am referring to the /value/ of the variable,
+   not to the variable itself. The dollar symbol expands the name and outputs
+   the content of the variable.
+   #+BEGIN_SRC sh
+   # WRONG!!!
+   $a=42
+   echo $a
+   #+END_SRC
+   It is important to note that there are no blank space next to the equal symbol
+** Command output
+   Variables can store the output of a command invoked with $()
+   #+BEGIN_SRC sh
+   a=$(cat "sum.dat" | wc -l)
+   #+END_SRC
