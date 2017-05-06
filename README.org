@@ -1,0 +1,17 @@
+#+TITLE: Open Source: Tool for Physics
+#+AUTHOR: Gabriele Bozzola
+
+Open Source: Tool for Physics are four seminars that want to introduce students
+to the most importants computational tools for a physicists.
+
+* Topics covered:
+** Seminar 1, 02/05/17
+- GNU/Linux
+** Seminar 2, 09/05/17
+- Bash scripting
+- Git and GitHub
+** Seminar 3, 16/05/17
+- Python (NumPy, SciPy and Matplotlib)
+** Seminar 4, 22/5/17
+- LaTeX
+- GNU Emacs
