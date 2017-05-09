@@ -1,0 +1,46 @@
+#+TITLE: Git
+#+AUTHOR: Gabriele Bozzola
+
+INCREASE THE FONT!!!
+
+* Getting started
+** Create an online repo (GitHub as example)
+** Clone the repo
+   #+BEGIN_SRC sh
+   git clone https://github.com/Sbozzolo/test.git
+   #+END_SRC
+** Explore the repo
+   #+BEGIN_SRC sh
+   cd test
+   ls
+   #+END_SRC
+** Add a file
+   #+BEGIN_SRC sh
+   echo "This is my first file" >> file
+   #+END_SRC
+** Check out what's happening
+   #+BEGIN_SRC sh
+   git status
+   #+END_SRC
+** Add a new file to the tracked ones
+   #+BEGIN_SRC sh
+   git add file
+   #+END_SRC
+** Check out what's happening now
+   #+BEGIN_SRC sh
+   git status
+   #+END_SRC
+** Commit
+   #+BEGIN_SRC sh
+   git commit -m "First commit"
+   #+END_SRC
+   The flag -m means that the subsequent string is to be put as a title
+   of the commit. In this case there is only the title.
+** Push
+   #+BEGIN_SRC sh
+   git push origin master
+   #+END_SRC
+   Origin is always the name of the online repo from where I cloned.
+   I can start a repo in an existing folder with git init, in that case
+   I have to tell git where is the online repo with git remote add origin.
+** Check on GitHub
