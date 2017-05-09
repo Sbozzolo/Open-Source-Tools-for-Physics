@@ -1,0 +1,214 @@
+#+TITLE: Scripting
+#+AUTHOR: Gabriele Bozzola
+
+INCREASE THE FONT!!!
+
+* Shabang!
+  The shabang is the pair a symbols #! which are interpreted by the operating
+  system with a special meaning: the rest of the text file will be executed
+  using the binary specified by the shabang.
+  Examples:
+
+  | Shabang                | Program              |
+  |------------------------+----------------------|
+  | #!/bin/bash            | Usual shell          |
+  | #!/usr/bin/python      | (Usually) Python2    |
+  | #!/usr/bin/env /program/ | /program/ (non common) |
+
+** which /command/
+   which /command/ tells the location of the binary /command/, this is the path
+   to be put after the shabang
+** chmod
+   Change Mode: it is used to change permissions to a file. The possible
+   permissions are /reading/, /writing/ and /executing/. Scripts with shabang need to
+   have the /execute/ attribute
+   #+BEGIN_SRC sh
+   chmod +x script.sh
+   #+END_SRC
+
+* Shell scripts
+  A particular (but extremely common) case of script is shell script, which are
+  the script that involves primary manipulating files.
+** Hello world
+   #+BEGIN_SRC sh
+   #!/bin/bash
+   echo "Hello World!"
+   #+END_SRC
+** Copy files
+*** First naive way
+   #+BEGIN_SRC sh
+   mkdir backup
+   cp die0.dat backup/die0.dat
+   cp die1.dat backup/die1.dat
+   cp die2.dat backup/die2.dat
+   cp die3.dat backup/die3.dat
+   cp die4.dat backup/die4.dat
+   cp die5.dat backup/die5.dat
+   cp die6.dat backup/die6.dat
+   cp die7.dat backup/die7.dat
+   cp die8.dat backup/die8.dat
+   cp die9.dat backup/die9.dat
+   cp die10.dat backup/die10.dat
+   #+END_SRC
+*** /Educative/ way
+    #+BEGIN_SRC sh
+    mkdir backup
+    for f in $(ls die*)
+    do
+       cp "$f" "backup/""$f"
+    done
+    #+END_SRC
+    * is a /wildcard/, it means "every possible combination of chars of every
+    possible length"
+
+    With a for loop you can write code once and execute it on an arbitrary
+    large number of files. There are also while loops and if statements.
+
+    (It is a safe practice to encapsulate string variables in double quotes,
+    more on this advanced topic [[http://www.grymoire.com/Unix/Quote.html][here]])
+
+    NOTE: In most cases for and while loops in bash scripts should be avioded
+    as (why? [[https://unix.stackexchange.com/questions/169716/why-is-using-a-shell-loop-to-process-text-considered-bad-practice][StackExchange]]). The correct way in most of the cases is to use
+    find, in this example the safest and fastest solution is:
+    #+BEGIN_SRC sh
+    mkdir backup
+    find . -maxdepth 1 -type f -name "die*" -exec cp '{}' backup \;
+    #+END_SRC
+    find is a really handy commnand that should be checked out.
+*** Fast way
+    #+BEGIN_SRC sh
+    mkdir backup && cp die* backup
+    #+END_SRC
+    && means: if the previous command succedes execute the second
+** The law of large numbers and the central limit theorem
+   I want to write a script to:
+   - Use the random program to roll die with 4 -> 12 faces 5000 times
+   - Use the random program to roll a second dice with 4 -> 12 faces 5000 times
+   - Calculate the sum of the two dice
+   - Calculate the expected value depening on the number of faces
+   - Calculate the average value roll after roll
+   - Plot the results
+   - Create an histogram with the sum values
+   - Plot the histogram
+   #+BEGIN_SRC sh
+     #!/bin/bash
+
+     # Simulation of 5000 die rolls with dice with increasing
+     # number of faces to verify the law of large numbers and
+     # the central limit theorem
+
+     for i in {4..10}
+     do
+         # Diagnostic message
+         echo "Working on d$i die"
+
+         # Create a folder named after the number of faces
+         # The flag -p (parent) prevent the creation of the
+         # folder if it already exists
+         # It is always better to enclose variables in double
+         # quotes
+         mkdir -p "$i"
+
+         # Generate 5000 numbers from 1 to i and save them in
+         # a file called roll.dat in the folder i
+         # RECALL: random num min max
+         ./random 5000 1 "$i" >> "$i""/roll.dat"
+
+
+         # To calculate the exepcted value
+         # RECALL: var=$(cmd) stores the output of the commnad cmd in var
+         # RECALL: No spaces around equal
+
+         # seq is the command Sequence
+         # seq n produce as output the list of numbers from 1 to n
+         # With awk I sum those numbers and at the END I divide by their number,
+         # which in awk is NR (Number of Records) as each number is on its own line
+         # So for example:
+         # seq 4 ->
+         # 1
+         # 2
+         # 3
+         # 4
+         # With awk I sum these number and at the END divide by 4, which is the average
+
+         exp=$(seq "$i" | awk '{sum += $1} END {print sum/NR}')
+
+         # Calculate average step after step
+         # I use a similar trick, but now I use NR not at the END but at every
+         # step, NR is the number of the current line parsed by awk and I print the
+         # value at every line
+         # For example if roll is
+         # 2
+         # 4
+         # 2
+         # 5
+         # awk parse the first line, sum = 2 and prints 2/1
+         # awk parse the second line, sum = 6 and prints 6/2
+         # ...
+         # I take all the output and put it into averages
+
+         awk '{sum += $1; print sum/NR}' "$i""/roll.dat"  >> "$i""/averages.dat"
+
+
+         # Plot
+         # mean.gnuplot is a gnuplot script. The script can be run with ./mean.gnuplot if
+         # it has the shabang or with gnuplot mean.gnuplot or with cat mean.gnuplot | gnuplot
+         # I want to customize it before running it since I want to put the correct expected
+         # value, I use sed to change two keyword I have defined in the script with the
+         # correct value
+         cat mean.gnuplot | sed "s|EXP|$exp|" | sed "s=NUMB=$i=" | gnuplot >> "$i""/plot.png"
+
+
+         # Sleep means "do nothing" for tot seconds, it is here for technical reasons related
+         # to the generation of random numbers in the naive way of my program random. It can
+         # be avioded with a slightly modified version of random.c
+         sleep 0.5
+
+         # Roll the second die and store the output
+         ./random 5000 1 "$i" >> "$i""/roll2.dat"
+
+         # Take the two files and join them in a new two columns output, then take this
+         # output and feed awk with it, it sum the values of the two columns line by line
+         # Then, save everything to sum.dat in the folder
+         paste "$i""/roll.dat" "$i""/roll2.dat" | awk '{print $1 + $2}' >> "$i""/sum.dat"
+
+
+         # Create histogram
+         # To do basic maths in bash the double parentheses are required ((2 + 2))
+         # This for loop count the occurences of every number from 2 to 2*i and save
+         # it in a file (this is the histogram, bins and values)
+         for j in $(seq 2 $((i+i)))
+         do
+             # The flag -w means that there must be exact match
+             # I print the file sum and filter only the lines with the value of j, then
+             # I count them
+             occ=$(cat "$i""/sum.dat" | grep -w "$j" | wc -l)
+             echo "$j $occ" >> "$i""/histo.dat"
+         done
+
+         # This is another way to call guplot
+         # set style data boxes (or histogram) is a way to draw histograms
+         # Fill solid means to fill the columns with a color
+         gnuplot -e "set term png; set style data boxes; set style fill solid; plot '$i/histo.dat'" >> "$i""/histo.png"
+     done
+   #+END_SRC
+** seq
+   Sequence: seq n produce as output the list of numbers from 1 to n,
+   seq n m produces numbers from n to m
+** sed
+   Strem Editor: sed is super powerful command to manipulate text.
+   As awk it takes a command inside quotes ''. The command has
+   delimiters, it is not important which symbol is used as delimeter,
+   usually is /.
+   Some functions:
+   - Substitute a string with another one
+   - Delete strings or chars
+   - Execute operations based on Regular Expressions (REGEXP) and
+     thus supports pattern matching
+** Regular Expressions
+   Execute some task based on some criterion writable in a compact way,
+   examples:
+   - Delete evrey word that starts with X 'd/X*/'
+   - Transform to uppercase every string that does not contain numbers
+   - ...
+   (Useful advanced topic)
