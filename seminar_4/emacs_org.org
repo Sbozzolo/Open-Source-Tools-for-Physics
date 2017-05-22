@@ -1,0 +1,67 @@
+#+TITLE: Introduction to GNU Emacs
+#+AUTHOR: Gabriele Bozzola
+
+INCREASE THE FONT!!!
+
+* Example 1: Basic text editing
+** To find out what a keybind does: C-h k
+
+** Movment
+  - C-b
+  - C-f
+  - C-p
+  - C-n
+  - C-a
+  - C-e
+  - M-b
+  - M-f
+  ...
+  (Arrows can be used, but mastering movment with
+  the native commands means extra speed)
+** Killing (cutting)
+   - Char
+   - Word
+   - Line
+   - Line backward
+   - Line forward
+  Every killed region can be yanked (pasted) in the
+  future.
+** Undo tree
+** Searching
+   C-s = Advanced search system (support regexp)
+** flyspell mode = spell checker
+   Enabling the minor mode flyspell will enable a
+   spell checker, words can be corrected with C-c ;
+
+   I will make a mistakes and
+** keyboard macro
+   Keyboard macros are used when you want to do a complicate
+   repetitive task. You record the task once, and Emacs will
+   repeat it
+   (example with NewCompStar)
+** rec
+* Example 2: Python IDE
+** Many useful features
+   - Auto completion
+   - Syntax highlighting
+   - REPL
+   - Syntax checker
+   - Skeletons
+   - TRAMP (edit file on remote servers)
+* Example 3: MaGit
+   - Perfect integration with git
+   - Visual (no CLI required)
+* Example 4: LaTeX
+  - Spell, syntax checkers
+  - Prettification
+  - Smart compilation (LaTeX Biber LaTeX)
+  - Math mode
+  - Sync source code and PDF
+* Example 5: Org-mode
+  Org mode is an astonishing mode for note-taking, agenda, and much more.
+  It is so good that many people actually uses emacs only for org-mode
+  (eg. [[https://www.youtube.com/watch?v=sQS06Qjnkcc][Rainer Koenig]]).
+** Note-taking, checkboxes, TODOs, spreadsheets...
+** Presentations and LaTeX
+** org-capture
+* Example 6: Configuring emacs
